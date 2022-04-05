@@ -14,6 +14,10 @@ const GET_MOVIE = gql`
       rating
       language
     }
+    suggestions(id: $id) {
+        id
+        medium_cover_image
+    }
   }
 `
 const Container = styled.div`
@@ -38,7 +42,7 @@ const SubTitle = styled.h4`
     margin-bottom: 10px;
 `
 const Description = styled.p`
-    font-size: 28px;
+    font-size: 18px;
 `
 const Poster = styled.div`
     width: 25%;
@@ -48,6 +52,9 @@ const Poster = styled.div`
     background-size: cover;
     background-position: center center ;
 `
+const Suggestions = styled.div`
+    font-size:20px;
+`
 const Detail = () => {
     const { id } = useParams()
     const { loading, data } = useQuery(GET_MOVIE, {
@@ -55,21 +62,19 @@ const Detail = () => {
             id: parseInt(id)
         }
     })
-    // if (loading) return "Loading..."
-    // if (data && data.movie) return data.movie.title
+    console.log(data)
     return (
-        <Container>
-            <Column>
-                <Title>{loading ? "Loading" : data.movie.title}</Title>
-                {!loading && data.movie && (
-                    <>
-                        <SubTitle>{data.movie.language} • {data.movie.rating}</SubTitle>
-                        <Description>{data.movie.description_intro}</Description>
-                    </>
-                )}
-            </Column>
-            <Poster bg={data && data.movie ? data.movie.medium_cover_image : ""} />
-        </Container>
+        <>
+            <Container>
+                <Column>
+                    <Title>{loading ? "Loading" : data.movie.title}</Title>
+                    <SubTitle>{data?.movie?.language} • {data?.movie?.rating}</SubTitle>
+                    <Description>{data?.movie?.description_intro}</Description>
+                </Column>
+                <Poster bg={data?.movie?.medium_cover_image} />
+            </Container>
+            {data?.suggestions?.map(s => <Suggestions>{s.id}</Suggestions>)}
+        </>
     )
 }
 export default Detail
