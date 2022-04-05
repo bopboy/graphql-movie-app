@@ -7,10 +7,10 @@ import styled from 'styled-components'
 const GET_MOVIE = gql`
   query getMovie($id: Int!) {
     movie(id: $id) {
-    #   id
+      id
       title
       medium_cover_image
-      summary
+      description_intro
       rating
       language
     }
@@ -27,6 +27,7 @@ const Container = styled.div`
 `
 const Column = styled.div`
     margin-left: 10px;
+    width: 50%;
 `
 const Title = styled.h1`
     font-size: 65px;
@@ -43,6 +44,9 @@ const Poster = styled.div`
     width: 25%;
     height: 60%;
     background-color: transparent;
+    background-image: url(${props => props.bg});
+    background-size: cover;
+    background-position: center center ;
 `
 const Detail = () => {
     const { id } = useParams()
@@ -56,12 +60,15 @@ const Detail = () => {
     return (
         <Container>
             <Column>
-                <Title>
-                    {id}
-                </Title>
-                <SubTitle>English • 4.5</SubTitle>
-                <Description>lorem ipsums</Description>
+                <Title>{loading ? "Loading" : data.movie.title}</Title>
+                {!loading && data.movie && (
+                    <>
+                        <SubTitle>{data.movie.language} • {data.movie.rating}</SubTitle>
+                        <Description>{data.movie.description_intro}</Description>
+                    </>
+                )}
             </Column>
+            <Poster bg={data && data.movie ? data.movie.medium_cover_image : ""} />
         </Container>
     )
 }
