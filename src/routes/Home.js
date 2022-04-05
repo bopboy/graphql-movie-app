@@ -42,6 +42,14 @@ const Loading = styled.div`
     font-weight: 500;
     margin-top:10px;
 `
+const Movies = styled.div`
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 25px;
+    width: 60%;
+    position: relative;
+    top: -50px;
+`
 const Home = () => {
     const { loading, error, data } = useQuery(GET_MOVIES)
     if (error) return <div>{error}</div>
@@ -52,7 +60,13 @@ const Home = () => {
                 <SubTitle>asd</SubTitle>
             </Header>
             {loading && <Loading>Loading...</Loading>}
-            {!loading && data.movies && data.movies.map(m => <Movie key={m.id} id={m.id} />)}
+            {!loading && data.movies && (
+                <Movies>
+                    {data.movies.map(m =>
+                        <Movie key={m.id} id={m.id} bg={m.medium_cover_image} />
+                    )}
+                </Movies>
+            )}
         </Container>
     )
 }
